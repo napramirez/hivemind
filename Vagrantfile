@@ -50,7 +50,7 @@ Vagrant.configure(2) do |config|
   # Control
   config.vm.define $control[:hostname], primary: true do |control_config|
     control_config.vm.box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
-    control_config.vm.network "private_network", ip: $control[:ip_address]
+    control_config.vm.network "private_network", ip: $control[:ip_address], virtualbox__intnet: true
     control_config.vm.provision "shell", inline: "sudo apt-get install -y ansible"
     control_config.vm.provision "shell", inline: "cat /vagrant/ansible.hosts > /etc/ansible/hosts"
     control_config.vm.provision "shell", inline: "cat /vagrant/system.hosts >> /etc/hosts"
@@ -61,7 +61,7 @@ Vagrant.configure(2) do |config|
   $drones.each do |drone|
     config.vm.define drone[:hostname] do |drone_config|
       drone_config.vm.box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
-      drone_config.vm.network "private_network", ip: drone[:ip_address]
+      drone_config.vm.network "private_network", ip: drone[:ip_address], virtualbox__intnet: true
       drone_config.vm.provision "shell", inline: "sudo apt-get install -y python-simplejson"
       drone_config.vm.provision "shell", inline: "cat /vagrant/system.hosts >> /etc/hosts"
       drone_config.vm.provision "shell", inline: "cat /vagrant/ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys"
