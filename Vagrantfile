@@ -52,9 +52,9 @@ Vagrant.configure(2) do |config|
     control_config.vm.box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
     control_config.vm.network "private_network", ip: $control[:ip_address], virtualbox__intnet: true
     control_config.vm.provision "shell", path: "install-ansible.sh"
-    control_config.vm.provision "shell", inline: "cat /vagrant/ansible.hosts > /etc/ansible/hosts"
-    control_config.vm.provision "shell", inline: "cat /vagrant/system.hosts >> /etc/hosts"
-    control_config.vm.provision "shell", inline: "cp /vagrant/ssh/id_rsa /home/vagrant/.ssh/ && chown vagrant.vagrant /home/vagrant/.ssh/id_rsa && chmod 600 /home/vagrant/.ssh/id_rsa"
+    control_config.vm.provision "shell", path: "post-install-ansible.sh"
+    control_config.vm.provision "shell", path: "update-system-hosts.sh"
+    control_config.vm.provision "shell", path: "setup-control-ssh.sh"
   end
 
   # Drones
@@ -63,8 +63,8 @@ Vagrant.configure(2) do |config|
       drone_config.vm.box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
       drone_config.vm.network "private_network", ip: drone[:ip_address], virtualbox__intnet: true
       drone_config.vm.provision "shell", inline: "sudo apt-get install -y python-simplejson"
-      drone_config.vm.provision "shell", inline: "cat /vagrant/system.hosts >> /etc/hosts"
-      drone_config.vm.provision "shell", inline: "cat /vagrant/ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys"
+      drone_config.vm.provision "shell", path: "update-system-hosts.sh"
+      drone_config.vm.provision "shell", path: "setup-drone-ssh.sh"
     end
   end
 
