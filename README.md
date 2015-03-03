@@ -10,7 +10,7 @@ and instead encourages him to go straight to tinkering with Ansible.
 
 The versions of the software used are:
 * Ubuntu 14.04.2 LTS Server 64-bit [2]
-* The latest Ansible (1.5+)
+* The latest Ansible (1.8+)
 
 Feel free to modify the Vagrantfile as needed.
 
