@@ -51,9 +51,11 @@ Vagrant.configure(2) do |config|
   config.vm.define $control[:hostname], primary: true do |control_config|
     control_config.vm.box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
     control_config.vm.network "private_network", ip: $control[:ip_address], virtualbox__intnet: true
+    control_config.vm.provision "shell", path: "scripts/update-system-hosts.sh"
+    control_config.vm.provision "shell", path: "scripts/install-apt-deb-proxy.sh"
+    control_config.vm.provision "shell", path: "scripts/set-apt-deb-proxy.sh"
     control_config.vm.provision "shell", path: "scripts/install-ansible.sh"
     control_config.vm.provision "shell", path: "scripts/post-install-ansible.sh"
-    control_config.vm.provision "shell", path: "scripts/update-system-hosts.sh"
     control_config.vm.provision "shell", path: "scripts/setup-control-ssh.sh"
   end
 
@@ -62,8 +64,9 @@ Vagrant.configure(2) do |config|
     config.vm.define drone[:hostname] do |drone_config|
       drone_config.vm.box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
       drone_config.vm.network "private_network", ip: drone[:ip_address], virtualbox__intnet: true
-      drone_config.vm.provision "shell", inline: "sudo apt-get install -y python-simplejson"
       drone_config.vm.provision "shell", path: "scripts/update-system-hosts.sh"
+      drone_config.vm.provision "shell", path: "scripts/set-apt-deb-proxy.sh"
+      drone_config.vm.provision "shell", inline: "sudo apt-get install -y python-simplejson"
       drone_config.vm.provision "shell", path: "scripts/setup-drone-ssh.sh"
     end
   end
