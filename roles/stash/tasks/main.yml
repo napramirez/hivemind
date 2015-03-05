@@ -32,6 +32,6 @@
   sudo: yes
   
 - name: Turn Stash into a system service
-  service: name=stash state=stopped enabled=yes
+  service: name=stash enabled=yes
   sudo: yes
   
