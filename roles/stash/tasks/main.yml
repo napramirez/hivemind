@@ -1,0 +1,37 @@
+---
+- name: Create 'stash' group
+  group: name=stash
+  sudo: yes
+
+- name: Create 'stash' user
+  user: name=stash group=stash groups=vagrant append=yes
+  sudo: yes
+  
+- name: Download the Stash archive
+  shell: 'wget --continue --directory-prefix="/vagrant/cache" https://www.atlassian.com/software/stash/downloads/binary/atlassian-stash-{{version}}.tar.gz'
+  sudo: yes
+
+- name: Extract the Stash archive
+  shell: "mkdir /opt/atlassian-stash-{{version}} && tar zxf /vagrant/cache/atlassian-stash-{{version}}.tar.gz --directory=/opt/atlassian-stash-{{version}} --strip-components=1 creates=/opt/atlassian-stash-{{version}}"
+  sudo: yes
+
+- name: Grant ownership of Stash installation to 'stash' user
+  file: path="/opt/atlassian-stash-{{version}}" owner=stash group=stash recurse=yes
+  sudo: yes
+  
+- name: Create the Stash home directory
+  file: path=/vagrant/cache/stash state=directory owner=stash group=stash
+  sudo: yes
+
+- name: Set STASH_HOME
+  lineinfile: dest=/etc/environment regexp=^STASH_HOME= line=STASH_HOME=/vagrant/cache/stash
+  sudo: yes
+
+- name: Copy the Stash init script
+  copy: src=stash-init-script.sh dest=/etc/init.d/stash mode=0755
+  sudo: yes
+  
+- name: Turn Stash into a system service
+  service: name=stash state=stopped enabled=yes
+  sudo: yes
+  
