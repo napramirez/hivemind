@@ -31,16 +31,21 @@ $control = {
   :ip_address => next_ip_address
 }
 
+$hosts = {}
+$hosts[:control] = HivemindHost.new :control, next_ip_address
+$hosts[:control].is_control = true
+
 # Define the number of drones
-DRONE_HOSTNAME = "drone"
 $drone_count = 1
 $drones = []
 
 # Define the drone hash
 1.upto($drone_count) do |drone_index|
+  drone_hostname = "drone"+drone_index.to_s.rjust(2, '0')
+  $hosts[drone_hostname.to_sym] = HivemindHost.new drone_hostname, next_ip_address
   $drones.push({
-    :hostname   => DRONE_HOSTNAME+drone_index.to_s.rjust(2, '0'),
-    :ip_address => next_ip_address
+    :hostname   => $hosts[drone_hostname.to_sym].hostname,
+    :ip_address => $hosts[drone_hostname.to_sym].ip_address
   })
 end
 
