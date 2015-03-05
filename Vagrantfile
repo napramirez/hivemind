@@ -4,11 +4,19 @@
 # Define the network params
 PRIVATE_NETWORK = "192.168.50.*"
 PRIVATE_NETWORK_START = 100
+$host_count = 0
+
+# IP address counter
+def next_ip_address
+  ip_address = PRIVATE_NETWORK.sub('*', (PRIVATE_NETWORK_START+$host_count).to_s)
+  $host_count += 1
+  return ip_address
+end
 
 # Define the control
 $control = {
   :hostname   => "control",
-  :ip_address => PRIVATE_NETWORK.sub('*', PRIVATE_NETWORK_START.to_s)
+  :ip_address => next_ip_address
 }
 
 # Define the number of drones
@@ -20,7 +28,7 @@ $drones = []
 1.upto($drone_count) do |drone_index|
   $drones.push({
     :hostname   => DRONE_HOSTNAME+drone_index.to_s.rjust(2, '0'),
-    :ip_address => PRIVATE_NETWORK.sub('*', (PRIVATE_NETWORK_START+drone_index).to_s)
+    :ip_address => next_ip_address
   })
 end
 
