@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Nap Ramirez
+  description: A lean and quick Ansible role to install Oracle Java in Vagrant machines.
+  license: BSD
+  min_ansible_version: 1.8
+  platforms:
+  - name: Linux
+    versions:
+    - any
+  categories:
+  - development
+  - system
+  - web

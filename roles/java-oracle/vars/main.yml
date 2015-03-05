@@ -1,0 +1,9 @@
+---
+  # Java major version (e.g. 8 in 8u40-b25)
+  major_version: 8
+  
+  # Java minor version (e.g. 40 in 8u40-b25)
+  minor_version: 40
+  
+  # Java build number (e.g. 25 in 8u40-b25)
+  build_number: 25

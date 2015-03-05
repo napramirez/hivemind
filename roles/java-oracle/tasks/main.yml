@@ -1,0 +1,23 @@
+---
+- name: Prepare the download destination
+  file: path=/vagrant/cache state=directory
+
+- name: Download the Java archive
+  shell: 'wget --continue --directory-prefix="/vagrant/cache" --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/{{major_version}}u{{minor_version}}-b{{build_number}}/jdk-{{major_version}}u{{minor_version}}-linux-x64.tar.gz'
+  sudo: yes
+
+- name: Extract the Java archive
+  shell: "mkdir /opt/java-{{major_version}}-oracle && tar zxf /vagrant/cache/jdk-{{major_version}}u{{minor_version}}-linux-x64.tar.gz --directory=/opt/java-{{major_version}}-oracle --strip-components=1 creates=/opt/java-{{major_version}}-oracle"
+  sudo: yes
+
+- name: Update alternatives for 'java'
+  alternatives: name=java link=/usr/bin/java path="/opt/java-{{major_version}}-oracle/bin/java"
+  sudo: yes
+
+- name: Update alternatives for 'javac'
+  alternatives: name=javac link=/usr/bin/javac path="/opt/java-{{major_version}}-oracle/bin/javac"
+  sudo: yes
+
+- name: Set JAVA_HOME
+  lineinfile: dest=/etc/environment regexp=^JAVA_HOME= line=JAVA_HOME="/opt/java-{{major_version}}-oracle"
+  sudo: yes
