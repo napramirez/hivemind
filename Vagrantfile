@@ -74,7 +74,7 @@ Vagrant.configure(2) do |config|
         host_config.vm.provision "shell", path: "scripts/post-install-ansible.sh"
       else
         host_config.vm.provision "shell", path: "scripts/setup-drone-ssh.sh"
-        host_config.vm.provision "shell", inline: "sudo apt-get install -y python-simplejson"
+        host_config.vm.provision "shell", inline: "sudo apt-get install -y --force-yes python-simplejson python-apt"
       end
     end
   end
