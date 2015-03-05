@@ -25,28 +25,17 @@ class HivemindHost
   end
 end
 
-# Define the control
-$control = {
-  :hostname   => "control",
-  :ip_address => next_ip_address
-}
-
 $hosts = {}
 $hosts[:control] = HivemindHost.new :control, next_ip_address
 $hosts[:control].is_control = true
 
 # Define the number of drones
 $drone_count = 1
-$drones = []
 
 # Define the drone hash
 1.upto($drone_count) do |drone_index|
   drone_hostname = "drone"+drone_index.to_s.rjust(2, '0')
   $hosts[drone_hostname.to_sym] = HivemindHost.new drone_hostname, next_ip_address
-  $drones.push({
-    :hostname   => $hosts[drone_hostname.to_sym].hostname,
-    :ip_address => $hosts[drone_hostname.to_sym].ip_address
-  })
 end
 
 # Create the ansible hosts file
@@ -69,24 +58,24 @@ end
 # Main
 Vagrant.configure(2) do |config|
 
-  # Control
-  config.vm.define $control[:hostname], primary: true do |control_config|
-    control_config.vm.box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
-    control_config.vm.network "private_network", ip: $control[:ip_address], virtualbox__intnet: true
-    control_config.vm.provision "shell", path: "scripts/update-system-hosts.sh"
-    control_config.vm.provision "shell", path: "scripts/install-ansible.sh"
-    control_config.vm.provision "shell", path: "scripts/post-install-ansible.sh"
-    control_config.vm.provision "shell", path: "scripts/setup-control-ssh.sh"
-  end
+  $hosts.each_value do |host|
+    config.vm.define host.hostname do |host_config|
+      host_config.vm.box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
+      host_config.vm.network "private_network", ip: host.ip_address, virtualbox__intnet: true
 
-  # Drones
-  $drones.each do |drone|
-    config.vm.define drone[:hostname] do |drone_config|
-      drone_config.vm.box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
-      drone_config.vm.network "private_network", ip: drone[:ip_address], virtualbox__intnet: true
-      drone_config.vm.provision "shell", path: "scripts/update-system-hosts.sh"
-      drone_config.vm.provision "shell", inline: "sudo apt-get install -y python-simplejson"
-      drone_config.vm.provision "shell", path: "scripts/setup-drone-ssh.sh"
+      host_config.vm.provider "virtualbox" do |vb|
+        vb.memory = host.memory_in_mb
+      end
+
+      host_config.vm.provision "shell", path: "scripts/update-system-hosts.sh"
+      if host.is_control
+        host_config.vm.provision "shell", path: "scripts/setup-control-ssh.sh"
+        host_config.vm.provision "shell", path: "scripts/install-ansible.sh"
+        host_config.vm.provision "shell", path: "scripts/post-install-ansible.sh"
+      else
+        host_config.vm.provision "shell", path: "scripts/setup-drone-ssh.sh"
+        host_config.vm.provision "shell", inline: "sudo apt-get install -y python-simplejson"
+      end
     end
   end
 
