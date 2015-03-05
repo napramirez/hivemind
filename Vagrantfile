@@ -13,6 +13,18 @@ def next_ip_address
   return ip_address
 end
 
+# HivemindHost
+class HivemindHost
+  attr_accessor :hostname, :ip_address, :is_control, :memory_in_mb
+
+  def initialize(hostname, ip_address)
+    @hostname = hostname
+    @ip_address = ip_address
+    @is_control = false
+    @memory_in_mb = 512
+  end
+end
+
 # Define the control
 $control = {
   :hostname   => "control",
