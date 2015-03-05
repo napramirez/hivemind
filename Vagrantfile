@@ -26,11 +26,17 @@ class HivemindHost
 end
 
 $hosts = {}
+
+# Ansible control machine
 $hosts[:control] = HivemindHost.new :control, next_ip_address
 $hosts[:control].is_control = true
 
+# Stash
+$hosts[:stash] = HivemindHost.new :stash, next_ip_address
+$hosts[:stash].memory_in_mb = 2048
+
 # Define the number of drones
-$drone_count = 1
+$drone_count = 0
 
 # Define the drone hash
 1.upto($drone_count) do |drone_index|
