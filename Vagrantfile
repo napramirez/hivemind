@@ -62,9 +62,8 @@ end
 
 # Create the intermediary system hosts file
 File.open("system.hosts", "w+") do |f|
-  f.write("#{$control[:ip_address]}\t#{$control[:hostname]}\n")
-  $drones.each do |drone|
-    f.write("#{drone[:ip_address]}\t#{drone[:hostname]}\n")
+  $hosts.each_value do |host|
+    f.write("#{host.ip_address}\t#{host.hostname}\n")
   end
   f.close
 end
