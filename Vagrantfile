@@ -35,6 +35,10 @@ $hosts[:control].is_control = true
 $hosts[:stash] = HivemindHost.new :stash, next_ip_address
 $hosts[:stash].memory_in_mb = 2048
 
+# Bamboo
+$hosts[:bamboo] = HivemindHost.new :bamboo, next_ip_address
+#$hosts[:bamboo].memory_in_mb = 2048
+
 # Define the number of drones
 $drone_count = 0
 

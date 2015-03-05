@@ -1,0 +1,37 @@
+---
+- name: Create 'bamboo' group
+  group: name=bamboo
+  sudo: yes
+
+- name: Create 'bamboo' user
+  user: name=bamboo group=bamboo groups=vagrant append=yes
+  sudo: yes
+  
+- name: Download the Bamboo archive
+  shell: 'wget --continue --directory-prefix="/vagrant/cache" https://www.atlassian.com/software/bamboo/downloads/binary/atlassian-bamboo-{{version}}.tar.gz'
+  sudo: yes
+
+- name: Extract the Bamboo archive
+  shell: "mkdir /opt/atlassian-bamboo-{{version}} && tar zxf /vagrant/cache/atlassian-bamboo-{{version}}.tar.gz --directory=/opt/atlassian-bamboo-{{version}} --strip-components=1 creates=/opt/atlassian-bamboo-{{version}}"
+  sudo: yes
+
+- name: Grant ownership of Bamboo installation to 'bamboo' user
+  file: path="/opt/atlassian-bamboo-{{version}}" owner=bamboo group=bamboo recurse=yes
+  sudo: yes
+  
+- name: Create the Bamboo home directory
+  file: path=/vagrant/cache/bamboo state=directory owner=bamboo group=bamboo
+  sudo: yes
+
+- name: Set bamboo.home in bamboo-init.properties
+  lineinfile: dest=/opt/atlassian-bamboo-{{version}}/atlassian-bamboo/WEB-INF/classes/bamboo-init.properties regexp=^#bamboo.home= line=bamboo.home=/vagrant/cache/bamboo
+  sudo: yes
+
+- name: Copy the Bamboo init script
+  copy: src=bamboo-init-script.sh dest=/etc/init.d/bamboo mode=0755
+  sudo: yes
+  
+- name: Turn Bamboo into a system service
+  service: name=bamboo enabled=yes
+  sudo: yes
+  
