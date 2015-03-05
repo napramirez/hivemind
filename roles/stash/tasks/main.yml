@@ -27,6 +27,12 @@
   lineinfile: dest=/etc/environment regexp=^STASH_HOME= line=STASH_HOME=/vagrant/cache/stash
   sudo: yes
 
+- name: Set dev mode in JAVA_OPTS
+  lineinfile: dest=/opt/atlassian-stash-{{version}}/bin/catalina.sh regexp=^#JAVA_OPTS= line=JAVA_OPTS=-Datlassian.dev.mode=true
+  sudo: yes
+  tags:
+    - dev-mode
+
 - name: Copy the Stash init script
   copy: src=stash-init-script.sh dest=/etc/init.d/stash mode=0755
   sudo: yes
