@@ -77,15 +77,15 @@ Vagrant.configure(2) do |config|
         vb.memory = host.memory_in_mb
       end
 
-      host_config.vm.provision "shell", path: "scripts/update-system-hosts.sh"
       if host.is_control
         host_config.vm.provision "shell", path: "scripts/setup-control-ssh.sh"
         host_config.vm.provision "shell", path: "scripts/install-ansible.sh"
         host_config.vm.provision "shell", path: "scripts/post-install-ansible.sh"
-      else
-        host_config.vm.provision "shell", path: "scripts/setup-drone-ssh.sh"
-        host_config.vm.provision "shell", inline: "sudo apt-get install -y --force-yes python-simplejson python-apt"
       end
+
+      host_config.vm.provision "shell", path: "scripts/setup-drone-ssh.sh"
+      host_config.vm.provision "shell", path: "scripts/update-system-hosts.sh"
+      host_config.vm.provision "shell", inline: "sudo apt-get install -y --force-yes python-simplejson python-apt"
     end
   end
 
