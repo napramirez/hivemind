@@ -31,6 +31,7 @@ $hosts = {}
 
 # Ansible control machine
 $hosts[:control] = HivemindHost.new :control, next_ip_address
+$hosts[:control].memory_in_mb = 256
 $hosts[:control].is_control = true
 
 # Stash
