@@ -1,0 +1,25 @@
+---
+- name: Prepare the cache directory
+  file: path=/vagrant/cache state=directory
+
+- name: Ensure GnuPG is installed
+  apt: pkg=gnupg
+  sudo: yes
+
+- name: Download Michal Papis' GPG key
+  get_url: url=https://rvm.io/mpapis.asc dest=/vagrant/cache/mpapis.asc validate_certs=no
+
+- name: Import Michal Papis' GPG key
+  shell: 'gpg --import /vagrant/cache/mpapis.asc'
+
+- name: Download the RVM install script
+  get_url: url=https://get.rvm.io dest=/vagrant/cache/rvm_installer.sh validate_certs=no
+
+- name: Install RVM
+  shell: 'cat /vagrant/cache/rvm_installer.sh | bash -s stable'
+
+- name: Add RVM to ~/.bashrc
+  shell: 'echo "source ~/.rvm/scripts/rvm" >> ~/.bashrc'
+
+- name: Install Ruby Rails
+  script: "install-rails.sh {{ruby_version}}"
