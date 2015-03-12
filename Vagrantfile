@@ -15,7 +15,7 @@ end
 
 # HivemindHost
 class HivemindHost
-  attr_accessor :hostname, :ip_address, :is_control, :memory_in_mb, :box
+  attr_accessor :hostname, :ip_address, :is_control, :memory_in_mb, :box, :is_gui
 
   def initialize(hostname, ip_address)
     @hostname = hostname
@@ -23,6 +23,7 @@ class HivemindHost
     @is_control = false
     @memory_in_mb = 512
     @box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
+    @is_gui = false
   end
 end
 
@@ -44,6 +45,7 @@ $hosts[:bamboo] = HivemindHost.new :bamboo, next_ip_address
 $hosts[:krails] = HivemindHost.new :krails, next_ip_address
 $hosts[:krails].memory_in_mb = 1024
 $hosts[:krails].box = "napramirez/kubuntu-14.04.2-LTS-amd64-lite"
+$hosts[:krails].is_gui = true
 
 # Define the number of drones
 $drone_count = 0
@@ -81,6 +83,7 @@ Vagrant.configure(2) do |config|
 
       host_config.vm.provider "virtualbox" do |vb|
         vb.memory = host.memory_in_mb
+        vb.gui = host.is_gui
       end
 
       if host.is_control
