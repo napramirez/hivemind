@@ -15,13 +15,14 @@ end
 
 # HivemindHost
 class HivemindHost
-  attr_accessor :hostname, :ip_address, :is_control, :memory_in_mb
+  attr_accessor :hostname, :ip_address, :is_control, :memory_in_mb, :box
 
   def initialize(hostname, ip_address)
     @hostname = hostname
     @ip_address = ip_address
     @is_control = false
     @memory_in_mb = 512
+    @box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
   end
 end
 
@@ -38,6 +39,11 @@ $hosts[:stash].memory_in_mb = 2048
 # Bamboo
 $hosts[:bamboo] = HivemindHost.new :bamboo, next_ip_address
 #$hosts[:bamboo].memory_in_mb = 2048
+
+# Krails
+$hosts[:krails] = HivemindHost.new :krails, next_ip_address
+$hosts[:krails].memory_in_mb = 1024
+$hosts[:krails].box = "napramirez/kubuntu-14.04.2-LTS-amd64-lite"
 
 # Define the number of drones
 $drone_count = 0
@@ -70,7 +76,7 @@ Vagrant.configure(2) do |config|
 
   $hosts.each_value do |host|
     config.vm.define host.hostname do |host_config|
-      host_config.vm.box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
+      host_config.vm.box = host.box
       host_config.vm.network "private_network", ip: host.ip_address, virtualbox__intnet: true
 
       host_config.vm.provider "virtualbox" do |vb|
