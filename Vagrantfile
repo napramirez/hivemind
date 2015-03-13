@@ -49,7 +49,7 @@ $hosts[:krails].box = "napramirez/kubuntu-14.04.2-LTS-amd64-lite"
 $hosts[:krails].is_gui = true
 
 # Define the number of drones
-$drone_count = 0
+$drone_count = 2
 
 # Define the drone hash
 1.upto($drone_count) do |drone_index|
