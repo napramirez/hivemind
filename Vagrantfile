@@ -22,7 +22,7 @@ class HivemindHost
     @ip_address = ip_address
     @is_control = false
     @memory_in_mb = 512
-    @box = "dhoppe/ubuntu-14.04.2-amd64-nocm"
+    @box = "napramirez/ubuntu-14.04.2-LTS-amd64-server"
     @is_gui = false
   end
 end
@@ -95,7 +95,6 @@ Vagrant.configure(2) do |config|
 
       host_config.vm.provision "shell", path: "scripts/setup-drone-ssh.sh"
       host_config.vm.provision "shell", path: "scripts/update-system-hosts.sh"
-      host_config.vm.provision "shell", inline: "sudo apt-get install -y --force-yes python-simplejson python-apt"
     end
   end
 
