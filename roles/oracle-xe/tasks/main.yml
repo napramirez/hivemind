@@ -1,0 +1,85 @@
+---
+- name: Ensure the prerequisites are installed
+  apt: 'pkg={{item}} force=yes'
+  with_items:
+    - unzip
+    - alien
+    - libaio1
+    - unixodbc
+  sudo: yes
+
+#- name: Download the Oracle 11g XE package
+#  shell: 
+# url=wget --continue --directory-prefix="/vagrant/cache" --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn/linux/oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip
+
+- name: Extract the Oracle 11g XE package
+  unarchive: src=/vagrant/cache/oracle-xe-11.2.0-1.0.x86_64.rpm.zip dest=/vagrant/cache creates=/vagrant/cache/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm
+
+- name: Convert the Oracle 11g XE package from .rpm to .deb
+  shell: 'alien --scripts -d /vagrant/cache/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm'
+  args:
+    creates: oracle-xe_11.2.0-2_amd64.deb
+  sudo: yes
+
+- name: Copy the chkconfig hack
+  copy: src=chkconfig dest=/sbin/chkconfig mode=0755
+  sudo: yes
+
+- name: Copy the kernel parameters file for Oracle 11g XE
+  copy: src=60-oracle.conf dest=/etc/sysctl.d/60-oracle.conf mode=0644
+  sudo: yes
+
+- name: Load the kernel parameters
+  service: name=procps state=started
+  sudo: yes
+
+- name: Create a symlink to awk
+  file: src=/usr/bin/awk dest=/bin/awk state=link
+  sudo: yes
+
+- name: Create the subsys directory
+  file: path=/var/lock/subsys state=directory
+
+- name: Create the subsys/listener file
+  file: path=/var/lock/subsys/listener state=touch
+
+- name: Install Oracle 11g XE
+  apt: deb=oracle-xe_11.2.0-2_amd64.deb
+  sudo: yes
+
+- name: Remove the /dev/shm directory
+  file: path=/dev/shm state=absent
+  sudo: yes
+
+- name: Recreate the /dev/shm directory
+  file: path=/dev/shm state=directory mode=0777
+  sudo: yes
+
+- name: Mount /dev/shm with the specified RAM
+  shell: 'mount -t tmpfs shmfs -o size=512m /dev/shm'
+  args:
+    creates: dev_shm_mounted
+  sudo: yes
+
+- name: Copy the S01shm_load
+  template: src=S01shm_load dest=/etc/rc2.d/S01shm_load mode=0755
+  sudo: yes
+
+- name: Set the environment variables in /etc/bash.bashrc
+  lineinfile: dest=/etc/bash.bashrc regexp="{{item.regexp}}" line="{{item.line}}"
+  with_items:
+    - { regexp: '^export ORACLE_HOME', line: 'export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe' }
+    - { regexp: '^export ORACLE_SID', line: 'export ORACLE_SID=XE' }
+    - { regexp: '^export NLS_LANG', line: 'export NLS_LANG=`$ORACLE_HOME/bin/nls_lang.sh`' }
+    - { regexp: '^export ORACLE_BASE', line: 'export ORACLE_BASE=/u01/app/oracle' }
+    - { regexp: '^export LD_LIBRARY_PATH', line: 'export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH' }
+    - { regexp: '^export PATH', line: 'export PATH=$ORACLE_HOME/bin:$PATH' }
+  sudo: yes
+
+- name: Copy the response file filled up using ansible values
+  template: src=xe.rsp dest=/home/vagrant/xe.rsp
+  sudo: yes
+
+- name: Configure Oracle 11g XE using the response file
+  shell: '/etc/init.d/oracle-xe configure < /home/vagrant/xe.rsp'
+  sudo: yes

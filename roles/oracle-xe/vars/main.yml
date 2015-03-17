@@ -1,0 +1,12 @@
+---
+  # Ideally set to the RAM size in MB
+  oracle_shm_in_mb: 512
+
+  # ORACLE_HTTP_PORT in the response file
+  oracle_http_port: 8080
+
+  # ORACLE_LISTENER_PORT in the response file
+  oracle_listener_port: 1521
+
+  # ORACLE_PASSWORD in the response file
+  oracle_password: password
