@@ -1,4 +1,4 @@
 #!/bin/bash
 #
 
-cat /vagrant/system.hosts >> /etc/hosts
+cat /vagrant/cache/system.hosts >> /etc/hosts

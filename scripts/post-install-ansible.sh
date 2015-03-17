@@ -1,4 +1,4 @@
 #!/bin/bash
 #
 
-cat /vagrant/ansible.hosts > /etc/ansible/hosts
+cat /vagrant/cache/ansible.hosts > /etc/ansible/hosts
