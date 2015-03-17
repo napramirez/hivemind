@@ -3,7 +3,10 @@
   file: path=/vagrant/cache state=directory
 
 - name: Ensure GnuPG is installed
-  apt: pkg=gnupg
+  apt: 'pkg={{item}}'
+  with_items:
+    - gnupg
+    - curl
   sudo: yes
 
 - name: Download Michal Papis' GPG key
