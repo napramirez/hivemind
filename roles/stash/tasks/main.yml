@@ -34,7 +34,7 @@
     - dev-mode
 
 - name: Copy the Stash init script
-  copy: src=stash-init-script.sh dest=/etc/init.d/stash mode=0755
+  copy: src=stash-init-script.sh.lf dest=/etc/init.d/stash mode=0755
   sudo: yes
   
 - name: Turn Stash into a system service

@@ -22,4 +22,4 @@
   shell: 'echo "source ~/.rvm/scripts/rvm" >> ~/.bashrc'
 
 - name: Install Ruby Rails
-  script: "install-rails.sh {{ruby_version}}"
+  script: "install-rails.sh.lf {{ruby_version}}"
