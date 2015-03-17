@@ -1,4 +1,0 @@
-Acquire { 
-  Retries "0"; 
-  HTTP { Proxy "http://control:3142"; };
-};
