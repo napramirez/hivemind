@@ -1,0 +1,42 @@
+---
+- name: Ensure the prerequisites are installed
+  apt: pkg='{{item}}'
+  with_items:
+    - unzip
+    - libaio1
+  sudo: yes
+
+- name: Ensure the cache directory exists
+  file: path=/vagrant/cache state=directory
+
+- name: Download the Oracle Instant Client packages
+  shell: 'wget --continue --directory-prefix="/vagrant/cache" --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn/linux/instantclient/121020/{{item}}'
+  with_items:
+    - instantclient-basiclite-linux.x64-12.1.0.2.0.zip
+    - instantclient-sdk-linux.x64-12.1.0.2.0.zip
+    - instantclient-sqlplus-linux.x64-12.1.0.2.0.zip
+  sudo: yes
+
+- name: Extract the Oracle Instant Client packages
+  unarchive: src='/vagrant/cache/{{item}}' dest=/opt
+  with_items:
+    - instantclient-basiclite-linux.x64-12.1.0.2.0.zip
+    - instantclient-sdk-linux.x64-12.1.0.2.0.zip
+    - instantclient-sqlplus-linux.x64-12.1.0.2.0.zip
+  sudo: yes
+
+- name: Copy the LD_LIBRARY_PATH file
+  copy: src=oracle-instantclient.conf.lf dest=/etc/ld.so.conf.d/oracle-instantclient.conf
+  sudo: yes
+
+- name: Integrate the Oracle Instant Client libraries
+  shell: 'ldconfig'
+  sudo: yes
+
+- name: Create the symlink to sqlplus
+  file: src=/opt/instantclient_12_1/sqlplus dest=/usr/bin/sqlplus state=link
+  sudo: yes
+
+- name: Create the symlink to libclntsh.so
+  file: src=/opt/instantclient_12_1/libclntsh.so.12.1 dest=/opt/instantclient_12_1/libclntsh.so state=link
+  sudo: yes
