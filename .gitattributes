@@ -1,0 +1,7 @@
+# Catch-all rule for all files, unless specified below
+#
+* text=auto
+
+# All files ending in .lf should preserve LF line ending
+#
+*.lf eol=lf
