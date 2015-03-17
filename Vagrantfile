@@ -34,14 +34,6 @@ $hosts[:control] = HivemindHost.new :control, next_ip_address
 $hosts[:control].memory_in_mb = 256
 $hosts[:control].is_control = true
 
-# Stash
-$hosts[:stash] = HivemindHost.new :stash, next_ip_address
-$hosts[:stash].memory_in_mb = 2048
-
-# Bamboo
-$hosts[:bamboo] = HivemindHost.new :bamboo, next_ip_address
-#$hosts[:bamboo].memory_in_mb = 2048
-
 # Krails
 $hosts[:krails] = HivemindHost.new :krails, next_ip_address
 $hosts[:krails].memory_in_mb = 1024
