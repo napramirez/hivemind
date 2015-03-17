@@ -1,0 +1,12 @@
+---
+- hosts: '{{target}}'
+  remote_user: vagrant
+  sudo: yes
+
+  roles:
+    - { role: java-oracle, major_version: 7, minor_version: 75, build_number: 13 }
+    - { role: bamboo, version: 5.7.2 }
+
+  tasks:
+    - name: Ensure Git is installed
+      apt: pkg=git

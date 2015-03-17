@@ -1,0 +1,6 @@
+---
+- hosts: '{{target}}'
+  remote_user: vagrant
+
+  roles:
+    - { role: rails, ruby_version: 2.2 }
