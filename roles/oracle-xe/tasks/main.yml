@@ -81,5 +81,5 @@
   sudo: yes
 
 - name: Configure Oracle 11g XE using the response file
-  shell: '/etc/init.d/oracle-xe configure < /home/vagrant/xe.rsp'
+  shell: '/etc/init.d/oracle-xe configure responseFile=/home/vagrant/xe.rsp'
   sudo: yes
