@@ -1,0 +1,6 @@
+---
+- hosts: '{{target}}'
+  remote_user: vagrant
+
+  roles:
+    - { role: passenger }

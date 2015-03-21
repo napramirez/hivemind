@@ -1,0 +1,21 @@
+---
+- name: Ensure the prerequisites are installed
+  apt: 'pkg={{item}}'
+  with_items:
+    - curl
+    - libcurl4-openssl-dev
+    - apt-transport-https
+    - ca-certificates
+  sudo: yes
+
+- name: Add the Phusion Passenger PGP key
+  apt_key: keyserver=keyserver.ubuntu.com id=16378A33A6EF16762922526E561F9B9CAC40B2F7
+  sudo: yes
+
+- name: Add the Phusion Passenger APT repository
+  apt_repository: repo='deb https://oss-binaries.phusionpassenger.com/apt/passenger trusty main' update_cache=yes
+  sudo: yes
+
+- name: Install Phusion Passenger
+  apt: pkg=passenger
+  sudo: yes
