@@ -74,7 +74,7 @@ $hosts[:krails].box = "napramirez/kubuntu-14.04.2-LTS-amd64-lite"
 $hosts[:krails].is_gui = true
 
 # The number of drones
-allocate_generic_drones 16, "S",  512
+allocate_generic_drones  8, "S",  512
 allocate_generic_drones  8, "M", 1024
 allocate_generic_drones  4, "L", 2048
 
