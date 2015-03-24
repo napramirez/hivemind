@@ -1,3 +1,6 @@
 ---
   # Ruby version
   ruby_version: 2.2
+
+  # Ruby interpreter
+  ruby_interpreter: 'mri'

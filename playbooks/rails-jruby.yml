@@ -1,0 +1,7 @@
+---
+- hosts: '{{target}}'
+  remote_user: vagrant
+
+  roles:
+    - { role: java-oracle, major_version: 7, minor_version: 75, build_number: 13 }
+    - { role: rails, ruby_interpreter: 'jruby' }

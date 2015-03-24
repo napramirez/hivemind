@@ -3,4 +3,4 @@
   remote_user: vagrant
 
   roles:
-    - { role: rails, ruby_version: 2.2 }
+    - { role: rails, ruby_version: 2.2, ruby_interpreter: 'mri' }
