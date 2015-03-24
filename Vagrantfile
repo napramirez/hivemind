@@ -14,23 +14,23 @@ def next_ip_address
 end
 
 # Drone allocator
-def allocate_generic_drones(drone_count, type, memory_in_mb)
+def allocate_generic_drones(drone_count, size, memory_in_mb)
   1.upto(drone_count) do |drone_index|
-    drone_hostname = "drone-"+type.to_s+"-"+drone_index.to_s.rjust(2, '0')
+    drone_hostname = "drone-"+size.to_s+"-"+drone_index.to_s.rjust(2, '0')
     drone = HivemindHost.new drone_hostname, next_ip_address
     drone.memory_in_mb = memory_in_mb
     $hosts[drone_hostname.to_sym] = drone
   end
 end
 
-def allocate_gui_drones(drone_count, type, memory_in_mb)
+def allocate_gui_drones(drone_count, size, memory_in_mb, desktop_env)
   1.upto(drone_count) do |drone_index|
-    drone_hostname = "drone-"+type.to_s+"-"+drone_index.to_s.rjust(2, '0')
+    drone_hostname = "drone-"+desktop_env.to_s+"-"+size.to_s+"-"+drone_index.to_s.rjust(2, '0')
     drone = HivemindHost.new drone_hostname, next_ip_address
     drone.memory_in_mb = memory_in_mb
     drone.is_gui = true
-    drone.box = "napramirez/kubuntu-14.04.2-LTS-amd64-lite" if :kde
-    drone.box = "napramirez/ubuntu-14.04.2-LTS-amd64-desktoplite" if :unity
+    drone.box = "napramirez/kubuntu-14.04.2-LTS-amd64-lite" if desktop_env == :kde
+    drone.box = "napramirez/ubuntu-14.04.2-LTS-amd64-desktoplite" if desktop_env == :unity
     $hosts[drone_hostname.to_sym] = drone
   end
 end
@@ -84,8 +84,10 @@ allocate_generic_drones  8, :S,  512
 allocate_generic_drones  8, :M, 1024
 allocate_generic_drones  4, :L, 2048
 
-allocate_gui_drones  2,   :kde, 1048
-allocate_gui_drones  2, :unity, 2048
+allocate_gui_drones  2, :M, 1048, :kde
+allocate_gui_drones  2, :L, 2048, :kde
+allocate_gui_drones  2, :M, 1048, :unity
+allocate_gui_drones  2, :L, 2048, :unity
 
 generate_hosts "cache"
 
