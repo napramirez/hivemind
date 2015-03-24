@@ -28,6 +28,7 @@ def allocate_gui_drones(drone_count, type, memory_in_mb)
     drone_hostname = "drone-"+type.to_s+"-"+drone_index.to_s.rjust(2, '0')
     drone = HivemindHost.new drone_hostname, next_ip_address
     drone.memory_in_mb = memory_in_mb
+    drone.is_gui = true
     drone.box = "napramirez/kubuntu-14.04.2-LTS-amd64-lite" if :kde
     drone.box = "napramirez/ubuntu-14.04.2-LTS-amd64-desktoplite" if :unity
     $hosts[drone_hostname.to_sym] = drone
