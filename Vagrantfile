@@ -23,6 +23,17 @@ def allocate_generic_drones(drone_count, type, memory_in_mb)
   end
 end
 
+def allocate_gui_drones(drone_count, type, memory_in_mb)
+  1.upto(drone_count) do |drone_index|
+    drone_hostname = "drone-"+type.to_s+"-"+drone_index.to_s.rjust(2, '0')
+    drone = HivemindHost.new drone_hostname, next_ip_address
+    drone.memory_in_mb = memory_in_mb
+    drone.box = "napramirez/kubuntu-14.04.2-LTS-amd64-lite" if :kde
+    drone.box = "napramirez/ubuntu-14.04.2-LTS-amd64-desktoplite" if :unity
+    $hosts[drone_hostname.to_sym] = drone
+  end
+end
+
 # Host files generator
 def generate_hosts(output_dir)
   # Create the cache directory
@@ -67,16 +78,13 @@ $hosts[:control] = HivemindHost.new :control, next_ip_address
 $hosts[:control].memory_in_mb = 256
 $hosts[:control].is_control = true
 
-# Krails
-$hosts[:krails] = HivemindHost.new :krails, next_ip_address
-$hosts[:krails].memory_in_mb = 1024
-$hosts[:krails].box = "napramirez/kubuntu-14.04.2-LTS-amd64-lite"
-$hosts[:krails].is_gui = true
-
 # The number of drones
 allocate_generic_drones  8, "S",  512
 allocate_generic_drones  8, "M", 1024
 allocate_generic_drones  4, "L", 2048
+
+allocate_gui_drones  2,   :kde, 1048
+allocate_gui_drones  2, :unity, 2048
 
 generate_hosts "cache"
 
