@@ -1,0 +1,15 @@
+---
+- name: Prepare the download destination
+  file: path=/vagrant/cache state=directory
+
+- name: Download the generic Java package
+  get_url: url='{{java_package_url}}' dest='/vagrant/cache/{{java_package_filename}}' validate_certs=no
+  sudo: yes
+
+- name: Extract the generic Java package
+  shell: 'mkdir /opt/{{java_package_install_dir}} && tar zxf /vagrant/cache/{{java_package_filename}} --directory=/opt/{{java_package_install_dir}} --strip-components=1 creates=/opt/{{java_package_install_dir}}'
+  sudo: yes
+
+- name: Create a symlink to the application executable
+  file: src='/opt/{{java_package_install_dir}}/{{java_package_executable}}' dest='{{java_package_executable_link}}' state=link
+  sudo: yes
