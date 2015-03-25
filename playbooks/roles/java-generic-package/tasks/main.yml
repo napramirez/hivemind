@@ -13,3 +13,4 @@
 - name: Create a symlink to the application executable
   file: src='/opt/{{java_package_install_dir}}/{{java_package_executable}}' dest='{{java_package_executable_link}}' state=link
   sudo: yes
+  when: java_package_executable is defined and java_package_executable_link is defined
