@@ -5,6 +5,13 @@
   script: "install-rails.sh.lf {{ruby_version}}"
   when: ruby_interpreter == 'mri'
 
+- name: Ensure JRuby prerequisites are installed
+  apt: pkg='{{item}}'
+  with_items:
+    - git
+  sudo: yes
+  when: ruby_interpreter == 'jruby'
+
 - name: Install Rails (JRuby)
   script: "install-rails-jruby.sh.lf"
   when: ruby_interpreter == 'jruby'
