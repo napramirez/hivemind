@@ -5,3 +5,6 @@
 # All files ending in .lf should preserve LF line ending
 #
 *.lf eol=lf
+
+# Hivemind system scripts should preserve Unix-style line ending
+scripts/*.sh eol=lf
