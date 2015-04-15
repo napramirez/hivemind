@@ -10,12 +10,11 @@
   shell: "mkdir /opt/java-{{major_version}}-oracle && tar zxf /vagrant/cache/jdk-{{major_version}}u{{minor_version}}-linux-x64.tar.gz --directory=/opt/java-{{major_version}}-oracle --strip-components=1 creates=/opt/java-{{major_version}}-oracle"
   sudo: yes
 
-- name: Update alternatives for 'java'
-  alternatives: name=java link=/usr/bin/java path="/opt/java-{{major_version}}-oracle/bin/java"
-  sudo: yes
-
-- name: Update alternatives for 'javac'
-  alternatives: name=javac link=/usr/bin/javac path="/opt/java-{{major_version}}-oracle/bin/javac"
+- name: Update the alternatives
+  alternatives: name="{{item.name}}" link="{{item.link}}" path="{{item.path}}"
+  with_items:
+    - { name: 'java', link: '/usr/bin/java', path: '/opt/java-{{major_version}}-oracle/bin/java' }
+    - { name: 'javac', link: '/usr/bin/javac', path: '/opt/java-{{major_version}}-oracle/bin/javac' }
   sudo: yes
 
 - name: Set JAVA_HOME
