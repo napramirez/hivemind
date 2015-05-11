@@ -31,6 +31,7 @@ def allocate_gui_drones(drone_count, size, memory_in_mb, desktop_env)
     drone.is_gui = true
     drone.box = "napramirez/kubuntu-14.04.2-LTS-amd64-lite" if desktop_env == :kde
     drone.box = "napramirez/ubuntu-14.04.2-LTS-amd64-desktoplite" if desktop_env == :unity
+    drone.box = "napramirez/ubuntu-14.04.2-LTS-i386-desktoplite" if desktop_env == :unity_i386
     $hosts[drone_hostname.to_sym] = drone
   end
 end
@@ -88,6 +89,8 @@ allocate_gui_drones  2, :M, 1048, :kde
 allocate_gui_drones  2, :L, 2048, :kde
 allocate_gui_drones  2, :M, 1048, :unity
 allocate_gui_drones  2, :L, 2048, :unity
+
+allocate_gui_drones  1, :M, 1024, :unity_i386
 
 generate_hosts "cache"
 
