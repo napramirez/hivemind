@@ -7,3 +7,6 @@
   
   # Java build number (e.g. 25 in 8u40-b25)
   build_number: 25
+  
+  # Java architecture (e.g. x64)
+  arch: x64
