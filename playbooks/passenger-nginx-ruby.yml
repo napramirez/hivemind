@@ -1,0 +1,14 @@
+---
+- hosts: '{{target}}'
+  remote_user: vagrant
+
+  roles:
+    - { role: rails, ruby_version: 2.2, ruby_interpreter: 'mri' }
+    - { role: passenger, passenger_module: 'nginx', passenger_languages: 'ruby' }
+
+  tasks:
+    - name: Install prerequisites
+      apt: pkg={{item}}
+      with_items:
+        - git
+      sudo: yes
