@@ -11,5 +11,4 @@
       apt: pkg={{item}}
       with_items:
         - git
-        - ruby-dev
       sudo: yes

@@ -20,6 +20,11 @@
   apt: pkg=passenger
   sudo: yes
 
+- name: Install Nginx module prerequisites
+  apt: pkg=ruby-dev
+  sudo: yes
+  when: passenger_module == 'nginx' and passenger_languages.find('ruby') != -1
+
 - name: Build the Nginx module
   shell: "passenger-install-nginx-module --auto --prefix=/opt/nginx --auto-download --languages {{passenger_languages}}"
   sudo: yes
