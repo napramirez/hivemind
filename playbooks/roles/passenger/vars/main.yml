@@ -1,2 +1,6 @@
 ---
-# vars file for passenger
+  # Comma-separated list of languages (i.e. 'ruby,python,nodejs,meteor')
+  passenger_languages: 'ruby'
+
+  # Passenger module
+  passenger_module: 'nginx'

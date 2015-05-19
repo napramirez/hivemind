@@ -6,6 +6,7 @@
     - libcurl4-openssl-dev
     - apt-transport-https
     - ca-certificates
+    - ruby-dev
   sudo: yes
 
 - name: Add the Phusion Passenger PGP key
@@ -19,3 +20,33 @@
 - name: Install Phusion Passenger
   apt: pkg=passenger
   sudo: yes
+
+- name: Build the Nginx module
+  shell: "passenger-install-nginx-module --auto --prefix=/opt/nginx --auto-download --languages {{passenger_languages}}"
+  sudo: yes
+  when: passenger_module == 'nginx'
+
+- name: Copy the Nginx init script
+  copy: src=nginx.lf dest=/etc/init.d/nginx mode=0755
+  sudo: yes
+  when: passenger_module == 'nginx'
+
+- name: Configure Nginx to run as 'vagrant'
+  lineinfile: dest=/opt/nginx/conf/nginx.conf regexp=^#user line=user\ vagrant;
+  sudo: yes
+  when: passenger_module == 'nginx'
+
+- name: Configure Nginx to load includes
+  lineinfile: dest=/opt/nginx/conf/nginx.conf insertbefore=^\} line=include\ conf.d/*.conf;
+  sudo: yes
+  when: passenger_module == 'nginx'
+
+- name: Create the includes directory
+  file: path=/opt/nginx/conf/conf.d state=directory
+  sudo: yes
+  when: passenger_module == 'nginx'
+
+- name: Turn Nginx into a system service, and start it
+  service: name=nginx state=started enabled=yes
+  sudo: yes
+  when: passenger_module == 'nginx'
