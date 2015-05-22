@@ -1,0 +1,32 @@
+---
+- name: Create 'tomcat' group
+  group: name=tomcat
+  sudo: yes
+
+- name: Create 'tomcat' user
+  user: name=tomcat group=tomcat groups=vagrant append=yes
+  sudo: yes
+
+- name: Download the Tomcat archive
+  get_url: url=http://www.us.apache.org/dist/tomcat/tomcat-7/v7.0.62/bin/apache-tomcat-7.0.62.tar.gz dest=/vagrant/cache/apache-tomcat-7.0.62.tar.gz
+  sudo: yes
+
+- name: Extract the Tomcat archive
+  shell: "mkdir /opt/apache-tomcat-7.0.62 && tar zxf /vagrant/cache/apache-tomcat-7.0.62.tar.gz --directory=/opt/apache-tomcat-7.0.62 --strip-components=1 creates=/opt/apache-tomcat-7.0.62"
+  sudo: yes
+
+- name: Grant ownership of Tomcat installation to 'tomcat' user
+  file: path="/opt/apache-tomcat-7.0.62" owner=tomcat group=tomcat recurse=yes
+  sudo: yes
+
+- name: Copy the Tomcat init script
+  copy: src=tomcat.sh.lf dest=/etc/init.d/tomcat mode=0755
+  sudo: yes
+
+- name: Set CATALINA_OPTS
+  lineinfile: dest=/etc/environment regexp=^CATALINA_OPTS= line=CATALINA_OPTS="-Xmx512m"
+  sudo: yes
+
+- name: Turn Tomcat into a system service
+  service: name=tomcat enabled=yes
+  sudo: yes

@@ -1,0 +1,16 @@
+---
+- hosts: '{{target}}'
+  remote_user: vagrant
+
+  roles:
+    - { role: java-oracle, major_version: 7, minor_version: 75, build_number: 13 }
+    - { role: java-generic-package, java_package_url: 'http://mirror.nus.edu.sg/apache/maven/maven-3/3.3.1/binaries/apache-maven-3.3.1-bin.tar.gz', java_package_filename: 'apache-maven-3.3.1-bin.tar.gz', java_package_install_dir: 'apache-maven-3.3.1', java_package_executable: 'bin/mvn', java_package_executable_link: '/usr/bin/mvn' }
+    - { role: rails, ruby_interpreter: 'jruby' }
+    - { role: apache-tomcat }
+
+  tasks:
+    - name: Install prerequisites
+      apt: pkg={{item}}
+      with_items:
+        - git
+      sudo: yes
