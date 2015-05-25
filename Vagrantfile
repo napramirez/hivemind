@@ -85,9 +85,9 @@ allocate_generic_drones  8, :S,  512
 allocate_generic_drones  8, :M, 1024
 allocate_generic_drones  4, :L, 2048
 
-allocate_gui_drones  2, :M, 1048, :kde
+allocate_gui_drones  2, :M, 1024, :kde
 allocate_gui_drones  2, :L, 2048, :kde
-allocate_gui_drones  2, :M, 1048, :unity
+allocate_gui_drones  2, :M, 1024, :unity
 allocate_gui_drones  2, :L, 2048, :unity
 
 allocate_gui_drones  1, :M, 1024, :unity_i386
