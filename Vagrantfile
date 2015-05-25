@@ -84,6 +84,7 @@ $hosts[:control].is_control = true
 allocate_generic_drones  8, :S,  512
 allocate_generic_drones  8, :M, 1024
 allocate_generic_drones  4, :L, 2048
+allocate_generic_drones  2, :XL, 4096
 
 allocate_gui_drones  2, :M, 1024, :kde
 allocate_gui_drones  2, :L, 2048, :kde
