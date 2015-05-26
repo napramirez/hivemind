@@ -109,6 +109,10 @@ Vagrant.configure(2) do |config|
       end
 
       host_config.vm.synced_folder "cache/apt", "/var/cache/apt/archives", create: true
+      host_config.vm.provision "shell" do |s|
+	s.path = "scripts/setup-hostname.sh"
+	s.args = ["#{host.hostname.to_s}"]
+      end
 
       if host.is_control
         host_config.vm.provision "shell", path: "scripts/setup-control-ssh.sh"
