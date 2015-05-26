@@ -108,6 +108,8 @@ Vagrant.configure(2) do |config|
         vb.gui = host.is_gui
       end
 
+      host_config.vm.synced_folder "cache/apt", "/var/cache/apt/archives", create: true
+
       if host.is_control
         host_config.vm.provision "shell", path: "scripts/setup-control-ssh.sh"
         host_config.vm.provision "shell", path: "scripts/install-ansible.sh"
