@@ -1,0 +1,16 @@
+---
+- name: Add the MongoDB PGP key
+  apt_key: keyserver=keyserver.ubuntu.com id=7F0CEB10
+  sudo: yes
+
+- name: Add the MongoDB APT repository
+  apt_repository: repo='deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse' update_cache=yes
+  sudo: yes
+
+- name: Install MongoDB
+  apt: pkg=mongodb-org
+  sudo: yes
+
+- name: Turn MongoDB into a system service, and start it
+  service: name=mongod state=started enabled=yes
+  sudo: yes
