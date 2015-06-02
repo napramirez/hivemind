@@ -1,0 +1,3 @@
+---
+  # Jenkins HTTP port
+  http_port: 8080

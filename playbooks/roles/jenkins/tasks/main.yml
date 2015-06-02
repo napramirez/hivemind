@@ -1,0 +1,16 @@
+---
+- name: Download the jenkins-ci.org PGP key
+  get_url: url=http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key dest=~/jenkins-ci.org.key
+  sudo: yes
+
+- name: Add the jenkins-ci.org PGP key
+  apt_key: file=~/jenkins-ci.org.key
+  sudo: yes
+
+- name: Add the jenkins apt repository
+  apt_repository: 'repo="deb http://pkg.jenkins-ci.org/debian binary/" update_cache=yes'
+  sudo: yes
+
+- name: Install jenkins
+  apt: pkg=jenkins
+  sudo: yes
