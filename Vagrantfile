@@ -17,9 +17,13 @@ def write_hive_file
 end
 
 # Read drones from YAML file
-def read_hive_file
+def get_hosts_from_hive_file
+  hosts_from_hive_file = {}
   hive_file = File.join(__dir__, "hive.yml")
-  $hosts = YAML.load_file(hive_file) if File.file? hive_file
+  if File.file? hive_file
+    hosts_from_hive_file = YAML.load_file(hive_file)
+  end
+  hosts_from_hive_file
 end
 
 # IP address counter
@@ -91,12 +95,12 @@ end
 
 $hosts = {}
 
-read_hive_file
-
 # Ansible control machine
-$hosts[:control] = HivemindHost.new :control, "192.168.50.100"
-$hosts[:control].memory_in_mb = 256
-$hosts[:control].is_control = true
+control_host = HivemindHost.new :control, "192.168.50.100"
+control_host.memory_in_mb = 256
+control_host.is_control = true
+
+$hosts = { :control => control_host }.merge(get_hosts_from_hive_file)
 
 # The number of drones
 #allocate_generic_drones  8, :S,  512
