@@ -8,6 +8,13 @@ PRIVATE_NETWORK = "192.168.50.*"
 PRIVATE_NETWORK_START = 101
 $host_count = 0
 
+HIVEMIND_BOXES = {
+  :server    => "napramirez/ubuntu-14.04.2-LTS-amd64-server",
+  :kde       => "napramirez/kubuntu-14.04.2-LTS-amd64-lite",
+  :unity     => "napramirez/ubuntu-14.04.2-LTS-amd64-desktoplite",
+  :unityi386 => "napramirez/ubuntu-14.04.2-LTS-i386-desktoplite"
+}
+
 # Write the drones into a YAML file
 def write_hive_file
   hive_file = File.join(__dir__, "hive.yml")
@@ -49,9 +56,7 @@ def allocate_gui_drones(drone_count, size, memory_in_mb, desktop_env)
     drone = HivemindHost.new drone_hostname, next_ip_address
     drone.memory_in_mb = memory_in_mb
     drone.is_gui = true
-    drone.box = "napramirez/kubuntu-14.04.2-LTS-amd64-lite" if desktop_env == :kde
-    drone.box = "napramirez/ubuntu-14.04.2-LTS-amd64-desktoplite" if desktop_env == :unity
-    drone.box = "napramirez/ubuntu-14.04.2-LTS-i386-desktoplite" if desktop_env == :unityi386
+    drone.box = HIVEMIND_BOXES[desktop_env]
     $hosts[drone_hostname.to_sym] = drone
   end
 end
@@ -83,13 +88,13 @@ end
 class HivemindHost
   attr_accessor :hostname, :ip_address, :is_control, :memory_in_mb, :box, :is_gui
 
-  def initialize(hostname, ip_address)
+  def initialize(hostname, ip_address, is_control = false, memory_in_mb = 512, box = HIVEMIND_BOXES[:server], is_gui = false)
     @hostname = hostname
     @ip_address = ip_address
-    @is_control = false
-    @memory_in_mb = 512
-    @box = "napramirez/ubuntu-14.04.2-LTS-amd64-server"
-    @is_gui = false
+    @is_control = is_control
+    @memory_in_mb = memory_in_mb
+    @box = box
+    @is_gui = is_gui
   end
 end
 
