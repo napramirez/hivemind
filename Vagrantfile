@@ -98,14 +98,7 @@ class HivemindHost
   end
 end
 
-$hosts = {}
-
-# Ansible control machine
-control_host = HivemindHost.new :control, "192.168.50.100"
-control_host.memory_in_mb = 256
-control_host.is_control = true
-
-$hosts = { :control => control_host }.merge(get_hosts_from_hive_file)
+$hosts = { :control => HivemindHost.new(:control, "192.168.50.100", true, 256) }.merge(get_hosts_from_hive_file)
 
 # The number of drones
 #allocate_generic_drones  8, :S,  512
