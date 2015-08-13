@@ -5,7 +5,7 @@ require 'yaml'
 
 # Define the network params
 PRIVATE_NETWORK = "192.168.50.*"
-PRIVATE_NETWORK_START = 101
+PRIVATE_NETWORK_START = 100
 $host_count = 0
 
 HIVEMIND_BOXES = {
@@ -98,7 +98,7 @@ class HivemindHost
   end
 end
 
-$hosts = { :control => HivemindHost.new(:control, "192.168.50.100", true, 256) }.merge(get_hosts_from_hive_file)
+$hosts = { :control => HivemindHost.new(:control, next_ip_address, true, 256) }.merge(get_hosts_from_hive_file)
 
 # The number of drones
 #allocate_generic_drones  8, :S,  512
