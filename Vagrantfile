@@ -1,10 +1,26 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+require 'yaml'
+
 # Define the network params
 PRIVATE_NETWORK = "192.168.50.*"
-PRIVATE_NETWORK_START = 100
+PRIVATE_NETWORK_START = 101
 $host_count = 0
+
+# Write the drones into a YAML file
+def write_hive_file
+  hive_file = File.join(__dir__, "hive.yml")
+  File.open(hive_file, "w+") do |f|
+    f.write($hosts.to_yaml)
+  end
+end
+
+# Read drones from YAML file
+def read_hive_file
+  hive_file = File.join(__dir__, "hive.yml")
+  $hosts = YAML.load_file(hive_file) if File.file? hive_file
+end
 
 # IP address counter
 def next_ip_address
@@ -75,23 +91,25 @@ end
 
 $hosts = {}
 
+read_hive_file
+
 # Ansible control machine
-$hosts[:control] = HivemindHost.new :control, next_ip_address
+$hosts[:control] = HivemindHost.new :control, "192.168.50.100"
 $hosts[:control].memory_in_mb = 256
 $hosts[:control].is_control = true
 
 # The number of drones
-allocate_generic_drones  8, :S,  512
-allocate_generic_drones  8, :M, 1024
-allocate_generic_drones  4, :L, 2048
-allocate_generic_drones  2, :XL, 4096
-
-allocate_gui_drones  2, :M, 1024, :kde
-allocate_gui_drones  2, :L, 2048, :kde
-allocate_gui_drones  2, :M, 1024, :unity
-allocate_gui_drones  2, :L, 2048, :unity
-
-allocate_gui_drones  1, :M, 1024, :unityi386
+#allocate_generic_drones  8, :S,  512
+#allocate_generic_drones  8, :M, 1024
+#allocate_generic_drones  4, :L, 2048
+#allocate_generic_drones  2, :XL, 4096
+#
+#allocate_gui_drones  2, :M, 1024, :kde
+#allocate_gui_drones  2, :L, 2048, :kde
+#allocate_gui_drones  2, :M, 1024, :unity
+#allocate_gui_drones  2, :L, 2048, :unity
+#
+#allocate_gui_drones  1, :M, 1024, :unityi386
 
 generate_hosts "cache"
 
