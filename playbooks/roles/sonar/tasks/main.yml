@@ -1,0 +1,58 @@
+---
+- name: Ensure the prerequisites are installed
+  apt: "pkg={{item}}"
+  with_items:
+    - unzip
+  sudo: yes
+
+- name: Create 'sonar' group
+  group: name=sonar
+  sudo: yes
+
+- name: Create 'sonar' user
+  user: name=sonar group=sonar groups=vagrant append=yes
+  sudo: yes
+
+- name: Download the Sonar archive
+  get_url: 'url=https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-{{version}}.zip dest="/var/cache/hivemind"'
+  sudo: yes
+
+- name: Extract the Sonar archive
+  unarchive: "src=/var/cache/hivemind/sonarqube-{{version}}.zip dest=/opt"
+  sudo: yes
+
+- name: Grant ownership of Sonar installation to 'sonar' user
+  file: path="/opt/sonarqube-{{version}}" owner=sonar group=sonar recurse=yes
+  sudo: yes
+
+- name: Copy the Sonar init script
+  command: cp /opt/sonarqube-{{version}}/bin/{{platform}}/sonar.sh /etc/init.d/sonar
+  sudo: yes
+
+- name: Configure SONAR_HOME and PLATFORM in the Sonar init script
+  lineinfile: 'dest=/etc/init.d/sonar insertafter="^# Wrapper" line="SONAR_HOME=/opt/sonarqube-{{version}}\nPLATFORM={{platform}}"'
+  sudo: yes
+
+- name: Configure WRAPPER_CMD in the Sonar init script
+  lineinfile: 'dest=/etc/init.d/sonar regexp="^WRAPPER_CMD=" line="WRAPPER_CMD=${SONAR_HOME}/bin/${PLATFORM}/wrapper"'
+  sudo: yes
+
+- name: Configure WRAPPER_CONF in the Sonar init script
+  lineinfile: 'dest=/etc/init.d/sonar regexp="^WRAPPER_CONF=" line="WRAPPER_CONF=${SONAR_HOME}/conf/wrapper.conf"'
+  sudo: yes
+
+- name: Configure PIDDIR in the Sonar init script
+  lineinfile: 'dest=/etc/init.d/sonar regexp="^PIDDIR=" line="PIDDIR=${SONAR_HOME}/temp"'
+  sudo: yes
+
+- name: Configure RUN_AS_USER in the Sonar init script
+  lineinfile: 'dest=/etc/init.d/sonar regexp="^#RUN_AS_USER=" line="RUN_AS_USER=sonar"'
+  sudo: yes
+
+- name: Set the permissions on the Sonar init script
+  file: path=/etc/init.d/sonar mode=0755
+  sudo: yes
+
+- name: Turn Sonar into a system service
+  service: name=sonar enabled=yes
+  sudo: yes

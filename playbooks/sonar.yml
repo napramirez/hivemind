@@ -1,0 +1,8 @@
+---
+- hosts: '{{target}}'
+  remote_user: vagrant
+  sudo: yes
+
+  roles:
+    - { role: java-oracle, major_version: 8, minor_version: 40, build_number: 25}
+    - { role: sonar, version: 5.1.2 }

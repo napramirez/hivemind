@@ -1,0 +1,6 @@
+---
+  # Sonar version
+  version: 5.1.2
+
+  # Sonar platform
+  platform: linux-x86-64
