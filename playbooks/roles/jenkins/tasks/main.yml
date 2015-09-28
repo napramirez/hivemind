@@ -11,6 +11,10 @@
   apt_repository: 'repo="deb http://pkg.jenkins-ci.org/debian binary/" update_cache=yes'
   sudo: yes
 
+- name: Set JENKINS_HOME
+  lineinfile: 'dest="/etc/environment" regexp="^JENKINS_HOME=" line="JENKINS_HOME=/var/data/jenkins"'
+  sudo: yes
+
 - name: Install jenkins
   apt: pkg=jenkins
   sudo: yes
