@@ -1,0 +1,8 @@
+---
+- hosts: '{{target}}'
+  remote_user: vagrant
+  sudo: yes
+
+  roles:
+    - { role: java-oracle, major_version: 8, minor_version: 40, build_number: 25}
+    - { role: nexus-oss, version: 2.11.4-01 }

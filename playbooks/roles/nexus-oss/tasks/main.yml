@@ -1,0 +1,56 @@
+---
+- name: Create 'nexus' group
+  group: name=nexus
+  sudo: yes
+
+- name: Create 'nexus' user
+  user: name=nexus group=nexus groups=vagrant append=yes
+  sudo: yes
+
+- name: Download the Nexus OSS archive
+  get_url: 'url="http://download.sonatype.com/nexus/oss/nexus-{{version}}-bundle.tar.gz" dest="/var/cache/hivemind"'
+  sudo: yes
+
+- name: Ensure the Nexus OSS installation directory exists
+  file: path="/opt/nexus-{{version}}" state=directory owner=nexus group=nexus
+  sudo: yes
+
+- name: Extract the Nexus OSS archive
+  unarchive: "src=/var/cache/hivemind/nexus-{{version}}-bundle.tar.gz dest=/opt owner=nexus group=nexus"
+  sudo: yes
+
+- name: Copy the Nexus OSS init script
+  command: "cp /opt/nexus-{{version}}/bin/nexus /etc/init.d/nexus"
+  sudo: yes
+
+- name: Configure NEXUS_HOME in the Nexus OSS init script
+  lineinfile: 'dest=/etc/init.d/nexus regexp="^NEXUS_HOME=" line="NEXUS_HOME=/opt/nexus-{{version}}"'
+  sudo: yes
+
+- name: Configure RUN_AS_USER in the Nexus OSS init script
+  lineinfile: 'dest=/etc/init.d/nexus regexp="^#RUN_AS_USER=" line="RUN_AS_USER=nexus"'
+  sudo: yes
+
+- name: Configure PIDDIR in the Nexus OSS init script
+  lineinfile: 'dest=/etc/init.d/nexus regexp="^#PIDDIR=" line="PIDDIR=${NEXUS_HOME}/tmp"'
+  sudo: yes
+
+- name: Set the permissions on the Nexus OSS init script
+  file: path=/etc/init.d/nexus mode=0755
+  sudo: yes
+
+- name: Ensure the Nexus OSS work directory exists
+  file: path="/var/data/nexus/sonatype-work" state=directory
+  sudo: yes
+
+- name: Ensure the default Nexus OSS work directory is NOT existing
+  file: path="/opt/sonatype-work" state=absent
+  sudo: yes
+
+- name: Configure PLEXUS_NEXUS_WORK environment variable
+  lineinfile: 'dest="/etc/environment" regexp="^PLEXUS_NEXUS_WORK=" line="PLEXUS_NEXUS_WORK=/var/data/nexus/sonatype-work"'
+  sudo: yes
+
+- name: Turn Nexus OSS into a system service
+  service: name=nexus enabled=yes
+  sudo: yes
