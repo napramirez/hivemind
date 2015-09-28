@@ -19,6 +19,10 @@
   unarchive: "src=/var/cache/hivemind/nexus-{{version}}-bundle.tar.gz dest=/opt owner=nexus group=nexus"
   sudo: yes
 
+- name: Configure the context path of the Nexus OSS web app
+  lineinfile: 'dest=/opt/nexus-{{version}}/conf/nexus.properties regexp="^nexus-webapp-context-path=" line="nexus-webapp-context-path=/"'
+  sudo: yes
+
 - name: Copy the Nexus OSS init script
   command: "cp /opt/nexus-{{version}}/bin/nexus /etc/init.d/nexus"
   sudo: yes
