@@ -25,6 +25,14 @@
   file: path="/opt/sonarqube-{{version}}" owner=sonar group=sonar recurse=yes
   sudo: yes
 
+- name: Configure the path to Sonar logs
+  lineinfile: 'dest=/opt/sonarqube-{{version}}/conf/sonar.properties regexp="^#sonar.path.logs=" line="sonar.path.logs=/var/data/sonar/logs"'
+  sudo: yes
+
+- name: Configure the path to Sonar data
+  lineinfile: 'dest=/opt/sonarqube-{{version}}/conf/sonar.properties regexp="^#sonar.path.data=" line="sonar.path.data=/var/data/sonar/data"'
+  sudo: yes
+
 - name: Copy the Sonar init script
   command: cp /opt/sonarqube-{{version}}/bin/{{platform}}/sonar.sh /etc/init.d/sonar
   sudo: yes
