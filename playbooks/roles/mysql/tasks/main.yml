@@ -9,6 +9,10 @@
   apt: pkg=mysql-server update_cache=yes
   sudo: yes
 
+- name: Install the Ansible module library for MySQL
+  apt: pkg=python-mysqldb
+  sudo: yes
+
 - name: Bind MySQL to 0.0.0.0
   lineinfile: 'dest=/etc/mysql/my.cnf regexp=^bind\-address line="bind-address = 0.0.0.0"'
   sudo: yes
