@@ -44,7 +44,7 @@
   sudo: yes
 
 - name: Ensure the Nexus OSS work directory exists
-  file: path="/var/data/nexus/sonatype-work" state=directory
+  file: path=/var/data/nexus/sonatype-work state=directory owner=nexus group=nexus
   sudo: yes
 
 - name: Ensure the default Nexus OSS work directory is NOT existing

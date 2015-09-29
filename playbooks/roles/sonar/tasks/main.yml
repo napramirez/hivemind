@@ -18,11 +18,11 @@
   sudo: yes
 
 - name: Extract the Sonar archive
-  unarchive: "src=/var/cache/hivemind/sonarqube-{{version}}.zip dest=/opt"
+  unarchive: "src=/var/cache/hivemind/sonarqube-{{version}}.zip dest=/opt owner=sonar group=sonar"
   sudo: yes
 
-- name: Grant ownership of Sonar installation to 'sonar' user
-  file: path="/opt/sonarqube-{{version}}" owner=sonar group=sonar recurse=yes
+- name: Ensure the Sonar work directory exists
+  file: path=/var/data/sonar state=directory owner=sonar group=sonar
   sudo: yes
 
 - name: Configure the path to Sonar logs
