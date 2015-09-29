@@ -13,10 +13,10 @@
 # url=wget --continue --directory-prefix="/vagrant/cache" --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn/linux/oracle11g/xe/oracle-xe-11.2.0-1.0.x86_64.rpm.zip
 
 - name: Extract the Oracle 11g XE package
-  unarchive: src=/vagrant/cache/oracle-xe-11.2.0-1.0.x86_64.rpm.zip dest=/vagrant/cache creates=/vagrant/cache/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm
+  unarchive: src=/var/cache/hivemind/oracle-xe-11.2.0-1.0.x86_64.rpm.zip dest=/var/cache/hivemind creates=/var/cache/hivemind/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm
 
 - name: Convert the Oracle 11g XE package from .rpm to .deb
-  shell: 'alien --scripts -d /vagrant/cache/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm'
+  shell: 'alien --scripts -d /var/cache/hivemind/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm'
   args:
     creates: oracle-xe_11.2.0-2_amd64.deb
   sudo: yes
