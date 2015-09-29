@@ -11,6 +11,18 @@
   apt_repository: 'repo="deb http://pkg.jenkins-ci.org/debian binary/" update_cache=yes'
   sudo: yes
 
+- name: Create 'jenkins' group
+  group: name=jenkins
+  sudo: yes
+
+- name: Create 'jenkins' user
+  user: name=jenkins group=jenkins groups=vagrant append=yes
+  sudo: yes
+
+- name: Ensure JENKINS_HOME exists
+  file: path=/var/data/jenkins state=directory owner=jenkins group=jenkins
+  sudo: yes
+
 - name: Set JENKINS_HOME
   lineinfile: 'dest="/etc/environment" regexp="^JENKINS_HOME=" line="JENKINS_HOME=/var/data/jenkins"'
   sudo: yes
