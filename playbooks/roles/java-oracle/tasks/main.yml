@@ -3,11 +3,11 @@
   file: path=/vagrant/cache state=directory
 
 - name: Download the Java archive
-  shell: 'wget --continue --directory-prefix="/vagrant/cache" --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/{{major_version}}u{{minor_version}}-b{{build_number}}/jdk-{{major_version}}u{{minor_version}}-linux-{{arch}}.tar.gz'
+  shell: 'wget --continue --directory-prefix="/var/cache/hivemind" --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/{{major_version}}u{{minor_version}}-b{{build_number}}/jdk-{{major_version}}u{{minor_version}}-linux-{{arch}}.tar.gz'
   sudo: yes
 
 - name: Extract the Java archive
-  shell: "mkdir /opt/java-{{major_version}}-oracle && tar zxf /vagrant/cache/jdk-{{major_version}}u{{minor_version}}-linux-{{arch}}.tar.gz --directory=/opt/java-{{major_version}}-oracle --strip-components=1 creates=/opt/java-{{major_version}}-oracle"
+  shell: "mkdir /opt/java-{{major_version}}-oracle && tar zxf /var/cache/hivemind/jdk-{{major_version}}u{{minor_version}}-linux-{{arch}}.tar.gz --directory=/opt/java-{{major_version}}-oracle --strip-components=1 creates=/opt/java-{{major_version}}-oracle"
   sudo: yes
 
 - name: Update the alternatives
