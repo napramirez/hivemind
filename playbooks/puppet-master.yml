@@ -1,0 +1,30 @@
+---
+- hosts: '{{target}}'
+  remote_user: vagrant
+
+
+
+
+  tasks:
+    - name: Download the PuppetLabs repository package
+      get_url: url=https://apt.puppetlabs.com/puppetlabs-release-pc1-trusty.deb dest=/var/cache/hivemind/puppetlabs-release-pc1-trusty.deb
+
+    - name: Install the PuppetLabs repository package
+      apt: deb=/var/cache/hivemind/puppetlabs-release-pc1-trusty.deb
+      sudo: yes
+
+    - name: Install the Puppet Server package
+      apt: pkg=puppetserver update_cache=yes
+      sudo: yes
+
+    - name: Add the Puppet executables to the PATH
+      lineinfile: dest=/etc/environment backrefs=yes regexp="^(.*):/bin:(.*)$" line="\1:/bin:/opt/puppetlabs/bin:\2"
+      sudo: yes
+
+    - name: Configure Puppet Master to use only 512MB memory
+      lineinfile: dest=/etc/default/puppetserver regexp="^JAVA_ARGS=" line='JAVA_ARGS="-Xms512m -Xmx512m"'
+      sudo: yes
+
+    - name: Start the Puppet Server service
+      service: name=puppetserver state=started
+      sudo: yes

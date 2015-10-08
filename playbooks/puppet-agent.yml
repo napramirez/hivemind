@@ -1,0 +1,30 @@
+---
+- hosts: '{{target}}'
+  remote_user: vagrant
+
+  vars:
+    puppet_master_hostname: puppet
+
+  tasks:
+    - name: Download the PuppetLabs repository package
+      get_url: url=https://apt.puppetlabs.com/puppetlabs-release-pc1-trusty.deb dest=/var/cache/hivemind/puppetlabs-release-pc1-trusty.deb
+
+    - name: Install the PuppetLabs repository package
+      apt: deb=/var/cache/hivemind/puppetlabs-release-pc1-trusty.deb
+      sudo: yes
+
+    - name: Install the Puppet Agent package
+      apt: pkg=puppet-agent update_cache=yes
+      sudo: yes
+
+    - name: Add the Puppet executables to the PATH
+      lineinfile: dest=/etc/environment backrefs=yes regexp="^(.*):/bin:(.*)$" line="\1:/bin:/opt/puppetlabs/bin:\2"
+      sudo: yes
+
+    - name: Point the Puppet Agent to the target Puppet Master
+      shell: "/opt/puppetlabs/bin/puppet config set server {{puppet_master_hostname}} --section main"
+      sudo: yes
+
+    - name: Start the Puppet Agent service
+      service: name=puppet state=started
+      sudo: yes
