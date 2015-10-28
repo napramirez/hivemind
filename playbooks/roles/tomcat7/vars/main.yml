@@ -1,2 +1,8 @@
 ---
-# vars file for tomcat7
+  tomcat_download_url: http://mirror.nus.edu.sg/apache/tomcat/tomcat-8/v8.0.28/bin/apache-tomcat-8.0.28.tar.gz
+
+  tomcat_package_filename: apache-tomcat-8.0.28.tar.gz
+
+  tomcat_install_dir: /opt/apache-tomcat-8.0.28
+
+  jvm_xmx: '-Xmx512m'

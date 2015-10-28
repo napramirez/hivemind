@@ -1,30 +1,34 @@
 ---
-- name: Create 'tomcat' group
+- name: Create the 'tomcat' group
   group: name=tomcat
   sudo: yes
 
-- name: Create 'tomcat' user
+- name: Create the 'tomcat' user
   user: name=tomcat group=tomcat groups=vagrant append=yes
   sudo: yes
 
 - name: Download the Tomcat archive
-  get_url: url=http://www.us.apache.org/dist/tomcat/tomcat-7/v7.0.62/bin/apache-tomcat-7.0.62.tar.gz dest=/vagrant/cache/apache-tomcat-7.0.62.tar.gz
+  get_url: url="{{tomcat_download_url}}" dest="/var/cache/hivemind/{{tomcat_package_filename}}"
   sudo: yes
 
 - name: Extract the Tomcat archive
-  shell: "mkdir /opt/apache-tomcat-7.0.62 && tar zxf /vagrant/cache/apache-tomcat-7.0.62.tar.gz --directory=/opt/apache-tomcat-7.0.62 --strip-components=1 creates=/opt/apache-tomcat-7.0.62"
+  shell: "mkdir {{tomcat_install_dir}} && tar zxf /var/cache/hivemind/{{tomcat_package_filename}} --directory={{tomcat_install_dir}} --strip-components=1 creates={{tomcat_install_dir}}"
+  sudo: yes
+
+- name: Copy the default Tomcat users file
+  copy: src=default-tomcat-users.xml dest="{{tomcat_install_dir}}/conf/tomcat-users.xml"
   sudo: yes
 
 - name: Grant ownership of Tomcat installation to 'tomcat' user
-  file: path="/opt/apache-tomcat-7.0.62" owner=tomcat group=tomcat recurse=yes
+  file: path="{{tomcat_install_dir}}" owner=tomcat group=tomcat recurse=yes
   sudo: yes
 
 - name: Copy the Tomcat init script
-  copy: src=tomcat.sh.lf dest=/etc/init.d/tomcat mode=0755
+  template: src=tomcat.j2 dest=/etc/init.d/tomcat mode=0755
   sudo: yes
 
 - name: Set CATALINA_OPTS
-  lineinfile: dest=/etc/environment regexp=^CATALINA_OPTS= line=CATALINA_OPTS="-Xmx512m"
+  lineinfile: dest=/etc/environment regexp=^CATALINA_OPTS= line=CATALINA_OPTS="{{jvm_xmx}}"
   sudo: yes
 
 - name: Turn Tomcat into a system service
