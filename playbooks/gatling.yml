@@ -1,0 +1,47 @@
+---
+- hosts: '{{target}}'
+  remote_user: vagrant
+
+  vars:
+    gatling_download_url: https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcharts-bundle/2.1.7/gatling-charts-highcharts-bundle-2.1.7-bundle.zip
+    gatling_package_filename: gatling-charts-highcharts-bundle-2.1.7-bundle.zip
+    gatling_install_dir: /opt/gatling-charts-highcharts-bundle-2.1.7
+
+  roles:
+    - { role: java-oracle, major_version: 8, minor_version: 65, build_number: 17 }
+
+  tasks:
+    - name: Ensure the prerequisites are installed
+      apt: pkg="{{item}}"
+      with_items:
+        - unzip
+
+    - name: Prepare the download destination
+      file: path=/var/cache/hivemind state=directory
+      sudo: yes
+
+    - name: Download the Gatling bundle
+      get_url: url="{{gatling_download_url}}" dest="/var/cache/hivemind/{{gatling_package_filename}}" validate_certs=no
+      sudo: yes
+
+    - name: Extract the generic Java package
+      unarchive: src="/var/cache/hivemind/{{gatling_package_filename}}" dest=/opt
+      sudo: yes
+
+    - name: Set GATLING_HOME
+      lineinfile: dest=/etc/environment regexp=^GATLING_HOME= line=GATLING_HOME="{{gatling_install_dir}}"
+      sudo: yes
+
+    - name: Set Gatling scripts to be executable
+      file: path="{{item}}" mode=0755
+      with_items:
+        - "{{gatling_install_dir}}/bin/gatling.sh"
+        - "{{gatling_install_dir}}/bin/recorder.sh"
+      sudo: yes
+
+    - name: Create a symlink to the Gatling scripts
+      file: src="{{item.path}}" dest="{{item.link}}" state=link
+      with_items:
+        - { path: "{{gatling_install_dir}}/bin/gatling.sh", link: "/usr/bin/gatling" }
+        - { path: "{{gatling_install_dir}}/bin/recorder.sh", link: "/usr/bin/recorder" }
+      sudo: yes
