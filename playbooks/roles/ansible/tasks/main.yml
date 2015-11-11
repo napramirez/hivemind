@@ -1,0 +1,8 @@
+---
+  - name: Add the PPA for Ansible
+    apt_repository: repo="ppa:ansible/ansible"
+    sudo: yes
+
+  - name: Install Ansible
+    apt: pkg=ansible update_cache=yes
+    sudo: yes
