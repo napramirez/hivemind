@@ -1,0 +1,19 @@
+---
+  - name: Add the PPA for Ruby NG
+    apt_repository: repo="ppa:brightbox/ruby-ng"
+
+  - name: Install Ruby NG
+    apt: pkg="{{item}}" update_cache=yes
+    with_items: "{{ruby_ng_packages}}"
+
+  - name: Install prerequisite applications
+    apt:  pkg="{{item}}"
+    with_items:
+      - git
+
+  - name: Install the Rails application's native dependencies
+    apt:  pkg="{{item}}"
+    with_items: "{{native_deps}}"
+
+  - name: Install bundler
+    gem:  name=bundler user_install=no

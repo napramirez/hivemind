@@ -1,0 +1,13 @@
+---
+  - hosts: "{{target}}"
+    sudo: yes
+
+    roles:
+      - { role: java-oracle, major_version: 8, minor_version: 60, build_number: 27}
+      - { role: ruby-env, ruby_ng_packages: ["ruby2.1", "ruby2.1-dev"], native_deps: ["libsqlite3-dev", "libmysqlclient-dev", "nodejs"] }
+
+    tasks:
+      - name: Copy the Jenkins public SSH key
+        authorized_key:
+          user: vagrant
+          key:  "{{public_ssh_key_string}}"
