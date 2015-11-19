@@ -1,0 +1,24 @@
+---
+  - name: Ensure prerequisites are installed
+    apt:
+      pkg: "{{item}}"
+    with_items:
+      - git
+
+  - name: Clone the LeanLabs Kanban project
+    git:
+      repo: https://gitlab.com/leanlabsio/kanban.git
+      dest: "~/kanban"
+
+  - name: Change default environment variables defined in docker-compose.yml
+    lineinfile:
+      dest:     "~/kanban/docker-compose.yml"
+      regexp:   "^(\\s*)- {{item.var_name}}="
+      line:     "\\1- {{item.var_name}}={{item.var_value}}"
+      backrefs: true
+    with_items:
+      - { var_name: "KANBAN_SERVER_HOSTNAME",  var_value: "{{server_hostname}}" }
+      - { var_name: "KANBAN_SECURITY_SECRET",  var_value: "{{security_secret}}" }
+      - { var_name: "KANBAN_GITLAB_URL",       var_value: "{{gitlab_url}}" }
+      - { var_name: "KANBAN_GITLAB_CLIENT",    var_value: "{{gitlab_client}}" }
+      - { var_name: "KANBAN_GITLAB_SECRET",    var_value: "{{gitlab_secret}}" }
