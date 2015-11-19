@@ -1,0 +1,13 @@
+---
+  - name: Download the Docker Compose script
+    get_url:
+      url: "https://github.com/docker/compose/releases/download/{{version}}/docker-compose-{{ansible_system}}-{{ansible_architecture}}"
+      dest: "/var/cache/hivemind/docker-compose-{{version}}-{{ansible_system}}_{{ansible_architecture}}"
+    sudo: yes
+
+  - name: Install the Docker Compose script
+    copy:
+      src: "/var/cache/hivemind/docker-compose-{{version}}-{{ansible_system}}_{{ansible_architecture}}"
+      dest: /usr/local/bin/docker-compose
+      mode: 0755
+    sudo: yes

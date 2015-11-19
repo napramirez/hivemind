@@ -1,0 +1,6 @@
+---
+- hosts: '{{target}}'
+  sudo: yes
+
+  roles:
+    - { role: docker-engine }
