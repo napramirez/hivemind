@@ -1,0 +1,12 @@
+---
+  - hosts: "{{target}}"
+    sudo: yes
+
+    roles:
+      - { role: java-oracle, major_version: 8, minor_version: 60, build_number: 27}
+
+    tasks:
+      - name: Copy the Jenkins public SSH key
+        authorized_key:
+          user: vagrant
+          key:  "{{public_ssh_key_string}}"
