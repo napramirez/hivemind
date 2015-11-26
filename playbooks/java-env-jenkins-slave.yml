@@ -1,0 +1,13 @@
+---
+  - hosts: "{{target}}"
+    sudo: yes
+
+    roles:
+      - { role: java-oracle, major_version: 8, minor_version: 60, build_number: 27}
+      - { role: java-generic-package, java_package_url: 'http://mirror.nus.edu.sg/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz', java_package_filename: 'apache-maven-3.3.9-bin.tar.gz', java_package_install_dir: 'apache-maven-3.3.9', java_package_executable: 'bin/mvn', java_package_executable_link: '/usr/bin/mvn' }
+
+    tasks:
+      - name: Copy the Jenkins public SSH key
+        authorized_key:
+          user: vagrant
+          key:  "{{public_ssh_key_string}}"
