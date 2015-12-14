@@ -1,0 +1,26 @@
+---
+  - name: Install Monit
+    apt: pkg=monit
+
+  - name: Enable Monit httpd
+    template:
+      src:  monit_httpd.j2
+      dest: /etc/monit/conf.d/monit_httpd
+    notify:
+      - Restart Monit
+
+  - name: Monitor the specified processes
+    template:
+      src:  "{{item}}.j2"
+      dest: "/etc/monit/conf.d/{{item}}"
+    with_items: "{{monit_processes}}"
+    notify:
+      - Restart Monit
+
+  - name: Configure Monit to report to M/Monit
+    template:
+      src:  mmonit_collector.j2
+      dest: /etc/monit/conf.d/mmonit_collector
+    notify:
+      - Restart Monit
+    when: mmonit_hostname is defined

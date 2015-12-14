@@ -1,0 +1,6 @@
+---
+  download_url: https://mmonit.com/dist/mmonit-3.5.1-linux-x64.tar.gz
+
+  package_filename: mmonit-3.5.1-linux-x64.tar.gz
+
+  installation_dir: /opt/mmonit-3.5.1

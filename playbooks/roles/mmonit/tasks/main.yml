@@ -1,0 +1,10 @@
+---
+  - name: Download the M/Monit package
+    get_url:
+      url:  "{{download_url}}"
+      dest: "/tmp/{{package_filename}}"
+
+  - name: Extract the M/Monit package into the installation directory
+    shell: "mkdir -p {{installation_dir}} && tar zxf /tmp/{{package_filename}} --directory={{installation_dir}} --strip-components=1"
+    args:
+      creates: "{{installation_dir}}"

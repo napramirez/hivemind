@@ -1,0 +1,7 @@
+---
+- hosts: '{{target}}'
+  remote_user: vagrant
+
+  roles:
+    - { role: mmonit }
+    - { role: monit, monit_processes: ["mmonit"] }
