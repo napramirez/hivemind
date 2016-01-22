@@ -1,0 +1,11 @@
+---
+- name: Add the Sublime Text PPA
+  apt_repository:
+    repo:         'ppa:webupd8team/sublime-text-3'
+    update_cache: yes
+  sudo: yes
+
+- name: Install Sublime Text 3
+  apt:
+    name: sublime-text-installer
+  sudo: yes
